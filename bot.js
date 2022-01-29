@@ -30,21 +30,14 @@ function getRandomArbitrary(min, max) {
 }
 
 // Make video file.
-var video = makeVideoFile();
-
-function makeVideoFile() {
-  var bumpNum = getRandomArbitrary(1, 8749); // Find a random bump.
-  var url = `http://static.bumpworthy.com/bumps/${bumpNum}.d.mp4` // Get bump video file.
-  var filepath = `media/${bumpNum}.mp4` // Set export locaiton.
-
-  return (url, filepath)
-}
-
-var url = video.url;
-var filepath = video.filepath;
+var bumpNum = getRandomArbitrary(1, 8749);
+var url = `http://static.bumpworthy.com/bumps/${bumpNum}.d.mp4` // Get bump video file.
+var filepath = `media/${bumpNum}.mp4` // Set export locaiton.
 
 // Check to see if the video already exists.
-if (filepath) {
+var checkFile = fs.existsSync(filepath)
+console.log(checkFile)
+if (checkFile = false) {
   logger.error(`Media failed, a video file with the name is in the "media" folder. Restart to try again.`)
   return;
 }
