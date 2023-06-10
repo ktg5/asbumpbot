@@ -1,8 +1,4 @@
 {
-    "botUsername": "(TWITTER USERNAME)",
-
-    "consumer_key": "#",
-    "consumer_key_secret": "##",
-    "access_token": "#-#",
-    "access_token_secret": "###w"
+    "time": "60" ,
+    "_comment": "The above will upload a bump every hour (60 minutes)"
 }
