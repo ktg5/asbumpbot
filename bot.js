@@ -1,6 +1,7 @@
-const {config, client, logger} = require("./botAuth");
+const {client, logger} = require("./botAuth");
 const http = require('http');
 const fs = require('fs');
+const schedule = require('node-schedule');
 
 // getRandomArbitrary
 function getRandomArbitrary(min, max) {
@@ -13,10 +14,9 @@ async function getUsername() {
 }
 
 console.log(`ｰｰｰｰｰｰｰｰｰｰ✄ｰｰｰｰｰｰｰｰｰｰ`);
-logger.info(`Starting process...`)
-// START
-// Time for how long until new clip is uploaded
-var time = config.time * 60000;
+logger.info(`Starting process every hour...`)
+
+
 // Start function
 function startProcess() {
 
@@ -61,25 +61,22 @@ function startProcess() {
             logger.info('Upload Completed');
 
             // Then we can send in the tweet.
-            var mainTweet = await client.v1.tweet('', { media_ids: mediaIds })
+            var mainTweet = await client.v2.tweet('', { media: { media_ids: mediaIds } })
             console.log(`ｰｰｰｰｰｰｰｰｰｰ✄ｰｰｰｰｰｰｰｰｰｰ`);
             // get bot username for logs
             var botUsername = await getUsername();
-            logger.info(`Sent main tweet; https://twitter.com/${botUsername}/status/${mainTweet.id_str}`);
+            logger.info(`Sent main tweet; https://twitter.com/${botUsername}/status/${mainTweet.data.id}`);
 
             // Oh! Don't forget the reply!
-            var replyTweet = await client.v1.reply(`[source: https://bumpworthy.com/bumps/${bumpNum}]`, mainTweet.id_str);
-            logger.info(`Sent reply tweet; https://twitter.com/${botUsername}/status/${replyTweet.id_str}`);
+            var replyTweet = await client.v2.reply(`[source: https://bumpworthy.com/bumps/${bumpNum}]`, mainTweet.data.id);
+            logger.info(`Sent reply tweet; https://twitter.com/${botUsername}/status/${replyTweet.data.id}`);
         });
     });
 };
 
-// Start the bot when first loaded.
-startProcess();
-
-// After a while, start again.
-setInterval(() => {
+// After it hits an hour, start again.
+var j = schedule.scheduleJob('0 */1 * * *', function(){  // this for one hour
     console.log(`ｰｰｰｰｰｰｰｰｰｰ✄ｰｰｰｰｰｰｰｰｰｰ`);
     logger.info(`Time hit! Redoing process...`)
     startProcess();
-}, time);
+});
