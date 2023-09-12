@@ -1,6 +1,6 @@
 {
   "name": "as-bump-bot",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "A Twitter bot that randomly posts bumps from bumpworthy.com",
   "main": "bot.js",
   "scripts": {

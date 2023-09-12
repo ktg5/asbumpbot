@@ -54,22 +54,30 @@ function startProcess() {
 
             var filePath = `./${filepath}`;
 
-            // Upload media first...
-            const mediaIds = await Promise.all([
-                client.v1.uploadMedia(filePath),
-            ]);
-            logger.info('Upload Completed');
+            // Now we're gonna try to upload the media & tweets.
+            try {
+                
+                // Upload media first...
+                const mediaIds = await Promise.all([
+                    client.v1.uploadMedia(filePath),
+                ]);
+                logger.info('Upload Completed');
 
-            // Then we can send in the tweet.
-            var mainTweet = await client.v2.tweet('', { media: { media_ids: mediaIds } })
-            console.log(`ｰｰｰｰｰｰｰｰｰｰ✄ｰｰｰｰｰｰｰｰｰｰ`);
-            // get bot username for logs
-            var botUsername = await getUsername();
-            logger.info(`Sent main tweet; https://twitter.com/${botUsername}/status/${mainTweet.data.id}`);
+                // Then we can send in the tweet.
+                var mainTweet = await client.v2.tweet('', { media: { media_ids: mediaIds } })
+                console.log(`ｰｰｰｰｰｰｰｰｰｰ✄ｰｰｰｰｰｰｰｰｰｰ`);
+                // get bot username for logs
+                var botUsername = await getUsername();
+                logger.info(`Sent main tweet; https://twitter.com/${botUsername}/status/${mainTweet.data.id}`);
 
-            // Oh! Don't forget the reply!
-            var replyTweet = await client.v2.reply(`[source: https://bumpworthy.com/bumps/${bumpNum}]`, mainTweet.data.id);
-            logger.info(`Sent reply tweet; https://twitter.com/${botUsername}/status/${replyTweet.data.id}`);
+                // Oh! Don't forget the reply!
+                var replyTweet = await client.v2.reply(`[source: https://bumpworthy.com/bumps/${bumpNum}]`, mainTweet.data.id);
+                logger.info(`Sent reply tweet; https://twitter.com/${botUsername}/status/${replyTweet.data.id}`);
+            
+            } catch (error) {
+                logger.error(`Something happened while uploading / trying to tweet!!`);
+                logger.error(error);
+            }
         });
     });
 };
