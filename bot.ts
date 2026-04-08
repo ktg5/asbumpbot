@@ -80,11 +80,10 @@ function startProcess(defiendClip?: string) {
             logger.info('Upload Completed -', media);
 
             // Add alt text.
-            let altTxt = '';
-            if (!config.addReplyInsteadofAlt || config.addReplyInsteadofAlt != true) altTxt = `[source: https://bumpworthy.com/bumps/${bumpNum}]`;
+            let altTxt = `[source: https://bumpworthy.com/bumps/${bumpNum}]`;
 
             // Then we can send in the tweet.
-            var mainTweet = await client.tweets.create(altTxt, {
+            var mainTweet = await client.tweets.create(config.addReplyInsteadofAlt === false ? altTxt : '', {
                 mediaIds: [media.media_id_string],
             });
             console.log(`ｰｰｰｰｰｰｰｰｰｰ✄ｰｰｰｰｰｰｰｰｰｰ`);
@@ -93,7 +92,7 @@ function startProcess(defiendClip?: string) {
 
             // Reply if user wants to use up rate limits.
             if (config.addReplyInsteadofAlt == true) {
-                var replyTweet = await client.tweets.create(`[source: https://bumpworthy.com/bumps/${bumpNum}]`, {
+                var replyTweet = await client.tweets.create(altTxt, {
                     replyTo: mainTweet.id
                 });
                 logger.info(`Sent reply tweet; https://twitter.com/${me.username}/status/${replyTweet.id}`);
