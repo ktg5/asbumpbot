@@ -1,4 +1,5 @@
 {
-    "time": "60" ,
-    "_comment": "The above will upload a bump every hour (60 minutes)"
+    "hours": 1,
+    "minutes": 0,
+    "addReplyInsteadofAlt": false
 }
