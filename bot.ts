@@ -45,7 +45,12 @@ function startProcess(defiendClip?: string) {
             file.on('finish', async () => { // When file is done downloaded.
                 file.close();
 
-                if (file.bytesWritten <= 500) {
+                // read file to see if it returned a html error page
+                const fileTxt = fs.readFileSync(filepath, { encoding: 'utf8' });
+                if (
+                    fileTxt.startsWith('<!DOCTYPE html>')
+                    || file.bytesWritten <= 1000
+                ) {
                     logger.error(`The bump received (ID: ${bumpNum}) might be not be an actual file.`)
                     if (restartCount >= 5) {
                         logger.error(`Too many restarts! Not going to continue.`);
